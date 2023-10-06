@@ -1,7 +1,5 @@
 import { Text } from "react-native";
 
 export default function RecentExpenses() {
-  return (
-    <Text>Recent Expenses</Text>
-  )
+  return <Text>Recent Expenses</Text>;
 }
