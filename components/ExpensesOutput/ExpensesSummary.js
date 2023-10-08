@@ -1,17 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
+import formatRupiah from "../../utils/formatRupiah";
 
 export default function ExpensesSummary({ expenses, periodName }) {
   const expensesSum = expenses.reduce((sum, expense) => {
     return sum + expense.amount;
   }, 0);
 
-  function formatRupiah(angka) {
-    let reverse = angka.toString().split("").reverse().join("");
-    let ribuan = reverse.match(/\d{1,3}/g);
-    let formatted = ribuan.join(".").split("").reverse().join("");
-    return "Rp. " + formatted;
-  }
   return (
     <View style={styles.container}>
       <Text style={styles.period}>{periodName}</Text>

@@ -35,6 +35,36 @@ export default function ExpensesOutput({ expenses, expensesPeriod }) {
       amount: 30000,
       date: new Date("2023-01-9"),
     },
+    {
+      id: "e6",
+      description: "Sepasan Sepatu",
+      amount: 900000,
+      date: new Date("2023-12-19"),
+    },
+    {
+      id: "e7",
+      description: "Sepasang Sepatu 2",
+      amount: 505000,
+      date: new Date("2023-10-19"),
+    },
+    {
+      id: "e8",
+      description: "Sepasang Baju 2",
+      amount: 20300,
+      date: new Date("2023-01-19"),
+    },
+    {
+      id: "e9",
+      description: "Sepasang Celana 2",
+      amount: 20000,
+      date: new Date("2023-01-10"),
+    },
+    {
+      id: "e10",
+      description: "Baju 2",
+      amount: 30000,
+      date: new Date("2023-01-9"),
+    },
   ];
 
   return (
@@ -48,7 +78,9 @@ export default function ExpensesOutput({ expenses, expensesPeriod }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 0,
     backgroundColor: GlobalStyles.colors.primary700,
   },
 });
