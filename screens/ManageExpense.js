@@ -1,13 +1,17 @@
 import { StyleSheet, View } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import IconButton from "../components/UI/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import { ExpenseContext } from "../store/expenses-context";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
-import { storeExpense } from "../utils/http";
+import { deleteExpense, storeExpense, updateExpense } from "../utils/http";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 
 export default function ManageExpense() {
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [error, setError] = useState();
   const expenseCtx = useContext(ExpenseContext);
   const route = useRoute();
   const navigation = useNavigation();
@@ -24,23 +28,45 @@ export default function ManageExpense() {
     });
   }, [navigation, isEditing]);
 
-  function deleteExpenseHandler() {
-    expenseCtx.deleteExpense(editedExpenseId);
-    navigation.goBack();
+  async function deleteExpenseHandler() {
+    setIsSubmiting(true);
+    try {
+      await deleteExpense(editedExpenseId);
+      expenseCtx.deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch (error) {
+      setError("Tidak bisa menghapus - Coba lagi nanti!");
+      setIsSubmiting(false);
+    }
   }
 
   function cancelHandler() {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData) {
-    if (isEditing) {
-      expenseCtx.updateExpense(editedExpenseId, expenseData);
-    } else {
-      storeExpense(expenseData);
-      expenseCtx.addExpense(expenseData);
+  async function confirmHandler(expenseData) {
+    setIsSubmiting(true);
+    try {
+      if (isEditing) {
+        expenseCtx.updateExpense(editedExpenseId, expenseData);
+        updateExpense(editedExpenseId, expenseData);
+      } else {
+        const id = await storeExpense(expenseData);
+        expenseCtx.addExpense({ ...expenseData, id: id });
+      }
+      navigation.goBack();
+    } catch (error) {
+      setError("Tidak Bisa Menyimpan Data - Coba Lagi Nanti");
+      setIsSubmiting(false);
     }
-    navigation.goBack();
+  }
+
+  if (error && !isSubmiting) {
+    return <ErrorOverlay message={error} />;
+  }
+
+  if (isSubmiting) {
+    return <LoadingOverlay />;
   }
 
   return (
